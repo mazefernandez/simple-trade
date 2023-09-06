@@ -1,6 +1,10 @@
 // Handling authorization of users 
 const bcrypt = require("bcryptjs")
+const jwt = require("jsonwebtoken")
 const user = require("../model/user")
+
+const JWT = "49065b777553cc1a50281e762756296851893029e96642824ecb932f3a59c6e6d9825af0a3da28fb"
+
 // Register a new user
 exports.register = async (req,res) => {
     const { username, password } = req.body
@@ -13,14 +17,29 @@ exports.register = async (req,res) => {
         await user.create({
             username,
             password: hash
-        }).then(registeredUser => res.status(200).json({
-            message: "User created successfully",
-            registeredUser
-        }))
-        .catch((err) => res.status(400).json({
-            message: "User not created successfully",
-            error: err.message 
-        }))
+        }).then(registeredUser => {
+
+            const maxAge = 5 * 60 * 60 
+            const token = jwt.sign(
+                { userId: registeredUser._id, username, role: registeredUser.role },
+                JWT, 
+                {
+                    expiresIn: maxAge
+                }
+            )
+            res.cookie("jwt", token, {
+                httpOnly: true,
+                maxAge: maxAge * 1000, 
+            })
+            res.status(200).json({
+                message: "User created successfully",
+                registeredUser: registeredUser._id
+            })
+            .catch((err) => res.status(400).json({
+                message: "User not created successfully",
+                error: err.message 
+            }))
+        }) 
     })
 }
 // Login a user 

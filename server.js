@@ -1,4 +1,5 @@
 const express = require('express') 
+const cookieParser = require('cookie-parser')
 const connection = require('./db')
 
 const app = express()
@@ -7,6 +8,7 @@ const PORT = 3000
 connection()
 
 app.use(express.json())
+app.use(cookieParser())
 app.use("/api/auth", require("./auth/route"))
 
 app.get('/', (req, res) => {
