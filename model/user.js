@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
         default: "basic",
         required: true
     },
-}) 
+}, { autoIndex: true }) 
 
 const user = mongoose.model("user", userSchema)
 module.exports = user
