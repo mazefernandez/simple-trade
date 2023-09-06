@@ -1,0 +1,36 @@
+{
+  "name": "store_management",
+  "version": "1.0.0",
+  "description": "A simple API that allows users to create and manage their own stores",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mazefernandez/simple-trade.git"
+  },
+  "keywords": [
+    "store",
+    "management",
+    "api"
+  ],
+  "author": "Maze Fernandez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mazefernandez/simple-trade/issues"
+  },
+  "homepage": "https://github.com/mazefernandez/simple-trade#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.19",
+    "trim-newlines": "^4.0.2"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5"
+  }
+}
