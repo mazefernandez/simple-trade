@@ -1,5 +1,8 @@
 const mongoose = require("mongoose")
 
+// User Schema
+const mongoose = require("mongoose")
+
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -11,6 +14,7 @@ const userSchema = new mongoose.Schema({
         minlength: 8,
         required: true
     },
+    // Used for authentication 
     role: {
         type: String,
         default: "basic",
@@ -18,5 +22,6 @@ const userSchema = new mongoose.Schema({
     },
 }, { autoIndex: true }) 
 
+// Allow other files to access "user"
 const user = mongoose.model("user", userSchema)
 module.exports = user

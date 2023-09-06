@@ -1,3 +1,4 @@
+// Store Schema
 const mongoose = require("mongoose")
 
 const storeSchema = new mongoose.Schema({
@@ -13,11 +14,13 @@ const storeSchema = new mongoose.Schema({
         index: true
     },
     address: String,
-    date: { // Registration of store on the application
+    // Registration of store on the application
+    date: { 
         type: Date,
         default: Date.now,
     },
 }, { autoIndex: true }) 
 
+// Allow other files to access "store"
 const store = mongoose.model("store", storeSchema)
 module.exports = store
