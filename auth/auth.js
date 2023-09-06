@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const user = require("../model/user")
 
+// jwt key
 const JWT = "49065b777553cc1a50281e762756296851893029e96642824ecb932f3a59c6e6d9825af0a3da28fb"
 
 // Register a new user
