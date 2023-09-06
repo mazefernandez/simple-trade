@@ -1,7 +1,7 @@
 // Handling authorization of users 
 const user = require("../model/user")
 // Register a new user
-exports.register = async (req,res,next) => {
+exports.register = async (req,res) => {
     const { username, password } = req.body
     // Checks if user entered a valid password length
     if (password.length < 8) {
@@ -25,7 +25,7 @@ exports.register = async (req,res,next) => {
     }
 }
 // Login a user 
-exports.login = async (req,res,next) => {
+exports.login = async (req,res) => {
     const { username, password } = req.body
     // Check if username and password exists 
     if (!username || !password) {
@@ -59,7 +59,7 @@ exports.login = async (req,res,next) => {
     }
 }
 // Update a user to admin 
-exports.update = async (req,res,next) => {
+exports.update = async (req,res) => {
     const { userId, role } = req.body 
     // Check if userId and role exists
     if (!userId || !role) {
@@ -105,6 +105,34 @@ exports.update = async (req,res,next) => {
     else {
         res.status(400).json({
             message: "Role is not Admin"
+        })
+    }
+}
+
+exports.deleteUser = async (req,res) => {
+    const { userId } = req.body
+    if (!userId) {
+        return res.status(400).json({
+            message: "No userId"
+        })
+    }
+    try {
+        const registeredUser = await user.findByIdAndDelete(userId)
+        if (!registeredUser) {
+            res.status(400).json({
+                message: "User not found"
+            })
+        }
+        else {
+            res.status(201).json({
+                message: "User delete was successful"
+            })
+        }
+    }
+    catch (err) {
+        res.status(400).json({
+            message: "An error occurred",
+            error: err.message
         })
     }
 }
