@@ -1,4 +1,5 @@
 // Handling authorization of users 
+const bcrypt = require("bcryptjs")
 const user = require("../model/user")
 // Register a new user
 exports.register = async (req,res) => {
@@ -7,22 +8,20 @@ exports.register = async (req,res) => {
     if (password.length < 8) {
         return res.status(400).json({message:"Password is less than 8 characters"})
     }
-    try {
+    // Encrypt the password 
+    bcrypt.hash(password, 10).then(async (hash) => {
         await user.create({
             username,
-            password,
+            password: hash
         }).then(registeredUser => res.status(200).json({
             message: "User created successfully",
             registeredUser
         }))
-    }
-    // Error handling for registering user
-    catch (err) {
-        res.status(401).json({
+        .catch((err) => res.status(400).json({
             message: "User not created successfully",
-            error: err.message
-        })
-    }
+            error: err.message 
+        }))
+    })
 }
 // Login a user 
 exports.login = async (req,res) => {
@@ -34,19 +33,27 @@ exports.login = async (req,res) => {
         })
     }
     try {
-        // Search for User with matching username and password
-        const registeredUser = await user.findOne({ username, password })
+        // Search for User with matching username
+        const registeredUser = await user.findOne({ username })
 
         if (!registeredUser) {
             res.status(401).json({
                 message: "Login was not successful",
-                error: "No User matching the credentials provided"
+                error: "No existing User"
             })
         }
         else {
-            res.status(200).json({
-                message: "Login successful",
-                registeredUser
+            // Check if password matches hash password
+            bcrypt.compare(password, registeredUser.password).then(function (match) {
+                match
+                    ? res.status(200).json({
+                        message: "Login successful",
+                        registeredUser
+                    })
+                    : res.status(400).json({
+                        message: "Login was not successful",
+                        error: "Wrong credentials"
+                    })
             })
         }
     }
@@ -108,7 +115,7 @@ exports.update = async (req,res) => {
         })
     }
 }
-
+// Delete a user
 exports.deleteUser = async (req,res) => {
     const { userId } = req.body
     if (!userId) {
@@ -117,18 +124,21 @@ exports.deleteUser = async (req,res) => {
         })
     }
     try {
+        // Check if user exists 
         const registeredUser = await user.findByIdAndDelete(userId)
         if (!registeredUser) {
             res.status(400).json({
                 message: "User not found"
             })
         }
+        // Successful delete 
         else {
             res.status(201).json({
                 message: "User delete was successful"
             })
         }
     }
+    // Error handling for delete user
     catch (err) {
         res.status(400).json({
             message: "An error occurred",
