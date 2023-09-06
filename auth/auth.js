@@ -1,5 +1,5 @@
 // Handling authorization of users 
-const user = require("..model/user")
+const user = require("../model/user")
 
 exports.register = async (req,res,next) => {
     const { username, password } = req.body
@@ -20,7 +20,7 @@ exports.register = async (req,res,next) => {
     catch (err) {
         res.status(401).json({
             message: "User not created successfully",
-            error: error.message,
+            error: err.message,
         })
     }
 }

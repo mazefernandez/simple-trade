@@ -1,5 +1,3 @@
-const mongoose = require("mongoose")
-
 // User Schema
 const mongoose = require("mongoose")
 
@@ -20,7 +18,7 @@ const userSchema = new mongoose.Schema({
         default: "basic",
         required: true
     },
-}, { autoIndex: true }) 
+}) 
 
 // Allow other files to access "user"
 const user = mongoose.model("user", userSchema)
