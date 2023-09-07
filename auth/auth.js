@@ -1,5 +1,6 @@
 // Handling authorization of users 
 const bcrypt = require("bcryptjs")
+const owasp = require("owasp-password-strength-test")
 const jwt = require("jsonwebtoken")
 const user = require("../model/user")
 
@@ -9,16 +10,10 @@ const JWT = "49065b777553cc1a50281e762756296851893029e96642824ecb932f3a59c6e6d98
 // Register a new user
 exports.register = async (req,res) => {
     const { username, password } = req.body
-    // Checks if username and password exist 
+    // Checks if username and password is provided 
     if (!username || !password) {
         return res.status(400).json({
             message:"Please enter both Username and Password"
-        })
-    }
-    // Checks if user entered a valid password length
-    if (password.length < 8) {
-        return res.status(400).json({
-            message:"Password is less than 8 characters"
         })
     }
     // Checks if username already exists
@@ -28,6 +23,23 @@ exports.register = async (req,res) => {
             message: "Username already taken"
         })
     } 
+    // Checks if user entered a strong password
+    try {
+        const result = owasp.test(password)
+        if (!result.strong) {
+            return res.status(401).json({
+                message:"Password is weak",
+                error: result.errors
+            })
+        }
+    }
+    catch (err) {
+        res.status(400).json({
+            message: "An error occurred",
+            error: err.message
+        })
+    }
+    
     // Encrypt the password 
     bcrypt.hash(password, 10).then(async (hash) => {
         await user.create({
@@ -60,7 +72,7 @@ exports.register = async (req,res) => {
 // Login a user 
 exports.login = async (req,res) => {
     const { username, password } = req.body
-    // Check if username and password exists 
+    // Check if username and password is provided 
     if (!username || !password) {
         return res.status(400).json({
             message: "Please enter both Username and Password"
@@ -102,7 +114,7 @@ exports.login = async (req,res) => {
 // Update a user to admin 
 exports.update = async (req,res) => {
     const { userId, role } = req.body 
-    // Check if userId and role exists
+    // Check if userId and role is provided
     if (!userId || !role) {
         return res.status(400).json({
             message: "No userId or role"
@@ -182,5 +194,4 @@ exports.deleteUser = async (req,res) => {
 }
 
 //@TODO 
-//add password strength
 //add update password 
