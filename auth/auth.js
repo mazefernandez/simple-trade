@@ -59,7 +59,7 @@ exports.register = async (req,res) => {
                 httpOnly: true,
                 maxAge: maxAge * 1000, 
             })
-            res.status(200).json({
+            res.status(201).json({
                 message: "User created successfully",
                 registeredUser: registeredUser._id
             })
@@ -91,15 +91,30 @@ exports.login = async (req,res) => {
         else {
             // Check if password matches hash password
             bcrypt.compare(password, registeredUser.password).then(function (match) {
-                match
-                    ? res.status(200).json({
-                        message: "Login successful",
-                        registeredUser
+                if (match) {
+                    const maxAge = 5 * 60 * 60
+                    const token = jwt.sign(
+                        { userId: registeredUser._id, username, role: registeredUser.role }, 
+                        JWT,
+                        {
+                            expiresIn: maxAge,
+                        }
+                    )
+                    res.cookie("jwt", token, {
+                        httpOnly: true,
+                        maxAge: maxAge * 1000
                     })
-                    : res.status(401).json({
+                    res.status(201).json({
+                        message: "Login was successful",
+                        registeredUser: registeredUser.userId
+                    })
+                }
+                else {
+                    res.status(400).json({
                         message: "Login was not successful",
                         error: "Wrong credentials"
                     })
+                }
             })
         }
     }

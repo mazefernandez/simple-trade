@@ -92,7 +92,7 @@ exports.addStore = async (req,res) => {
             userId, 
             address
         }).then(addedStore => {
-            res.status(200).json({
+            res.status(201).json({
                 message: "Store successfully created",
                 addedStore
             })

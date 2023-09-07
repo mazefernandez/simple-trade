@@ -27,6 +27,11 @@ app.get('/basic', userAuth, (req, res) => {
     res.send("User Route")
 })
 
+app.get("/logout", (req, res) => {
+    res.cookie("jwt", "", { maxAge: "1" })
+    res.redirect("/")
+  })
+
 const server = app.listen(PORT, () => 
     console.log(`Server is connected to port ${PORT}`)
 )
