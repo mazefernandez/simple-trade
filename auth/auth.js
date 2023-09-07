@@ -9,9 +9,17 @@ const JWT = "49065b777553cc1a50281e762756296851893029e96642824ecb932f3a59c6e6d98
 // Register a new user
 exports.register = async (req,res) => {
     const { username, password } = req.body
+    // Checks if username and password exist 
+    if (!username || !password) {
+        return res.status(400).json({
+            message:"Please enter both Username and Password"
+        })
+    }
     // Checks if user entered a valid password length
     if (password.length < 8) {
-        return res.status(400).json({message:"Password is less than 8 characters"})
+        return res.status(400).json({
+            message:"Password is less than 8 characters"
+        })
     }
     // Encrypt the password 
     bcrypt.hash(password, 10).then(async (hash) => {
@@ -70,7 +78,7 @@ exports.login = async (req,res) => {
                         message: "Login successful",
                         registeredUser
                     })
-                    : res.status(400).json({
+                    : res.status(401).json({
                         message: "Login was not successful",
                         error: "Wrong credentials"
                     })
@@ -90,7 +98,7 @@ exports.update = async (req,res) => {
     const { userId, role } = req.body 
     // Check if userId and role exists
     if (!userId || !role) {
-        res.status(400).json({
+        return res.status(400).json({
             message: "No userId or role"
         })
     }
@@ -166,3 +174,7 @@ exports.deleteUser = async (req,res) => {
         })
     }
 }
+
+//@TODO 
+//add password strength
+//add update password 

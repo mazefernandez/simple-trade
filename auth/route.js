@@ -1,4 +1,4 @@
-// Handle the routing of api endpoints
+// Handle the routing of auth endpoints
 const express = require("express")
 const router = express.Router()
 
