@@ -13,6 +13,7 @@ connection()
 app.use(express.json())
 app.use(cookieParser())
 app.use("/api/auth", require("./auth/route"))
+app.use("/api/store", require("./contoller/route"))
 
 app.get('/', (req, res) => {
     res.send("Simpletrade Ventures Exam")
