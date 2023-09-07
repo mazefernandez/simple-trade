@@ -21,6 +21,12 @@ exports.register = async (req,res) => {
             message:"Password is less than 8 characters"
         })
     }
+    // Checks if username already exists
+    if (user.findOne(username)) {
+        return res.status(400).json({
+            message: "Username already taken"
+        })
+    } 
     // Encrypt the password 
     bcrypt.hash(password, 10).then(async (hash) => {
         await user.create({
