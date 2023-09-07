@@ -29,4 +29,25 @@ exports.addStore = async (req,res) => {
     }
 }
 
+// Update store details
+exports.updateStore = async (req,res) => {
+    const { name, address, email, id } = req.body
+    try {
+        const addedStore = await store.findById(id) 
+        addedStore.name = name
+        addedStore.address = address
+        addedStore.email = email
+
+        const result = await addedStore.save()
+        res.status(201).json({
+            message:"Store was updated successfully"
+        })
+    }
+    catch (err) {
+        res.status(400).json({
+            message: "Update store was not successful",
+            error: err.message
+        })
+    }
+}
 

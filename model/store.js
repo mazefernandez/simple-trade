@@ -7,6 +7,7 @@ const storeSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    email: String,
     // Reference to user model
     userId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -25,3 +26,6 @@ const storeSchema = new mongoose.Schema({
 // Allow other files to access "store"
 const store = mongoose.model("store", storeSchema)
 module.exports = store
+
+//@TODO 
+//add phone validation 
