@@ -32,10 +32,7 @@ exports.getStore = async (req,res) => {
 
 // Get all stores
 exports.getStores = async (req,res) => {
-    const { id } = req.body
-    const stores = await store.find({
-        userId: ObjectId(id)
-    })
+    const stores = await store.find({})
 
     try {
         res.send(stores)
@@ -122,7 +119,8 @@ exports.updateStore = async (req,res) => {
 
         await addedStore.save()
         res.status(201).json({
-            message:"Store was updated successfully"
+            message:"Store was updated successfully",
+            addedStore
         })
     }
     catch (err) {

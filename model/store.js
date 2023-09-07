@@ -26,6 +26,3 @@ const storeSchema = new mongoose.Schema({
 // Allow other files to access "store"
 const store = mongoose.model("store", storeSchema)
 module.exports = store
-
-//@TODO 
-//add phone validation 
