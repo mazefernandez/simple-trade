@@ -22,7 +22,8 @@ exports.register = async (req,res) => {
         })
     }
     // Checks if username already exists
-    if (user.findOne(username)) {
+    const existingUser = await user.findOne({username})
+    if (existingUser) {
         return res.status(400).json({
             message: "Username already taken"
         })
@@ -50,11 +51,10 @@ exports.register = async (req,res) => {
                 message: "User created successfully",
                 registeredUser: registeredUser._id
             })
-            .catch((err) => res.status(400).json({
-                message: "User not created successfully",
-                error: err.message 
-            }))
-        }) 
+        }).catch((err) => res.status(400).json({
+            message: "User not created successfully",
+            error: err.message 
+        })) 
     })
 }
 // Login a user 
