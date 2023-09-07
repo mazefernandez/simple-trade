@@ -1,5 +1,6 @@
 // Store Schema
 const mongoose = require("mongoose")
+const user = require("./user")
 
 const storeSchema = new mongoose.Schema({
     name: {
@@ -19,7 +20,7 @@ const storeSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
-}, { autoIndex: true }) 
+}) 
 
 // Allow other files to access "store"
 const store = mongoose.model("store", storeSchema)
